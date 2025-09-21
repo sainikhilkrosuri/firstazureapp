@@ -1,0 +1,10 @@
+{% load static %}
+<h1>View Data Here</h1>
+
+
+{% for i in data %}
+
+{{i.sampler}}
+<img src="{{ i.data_image.url }}" height="50" width="50">
+
+{% endfor %}
