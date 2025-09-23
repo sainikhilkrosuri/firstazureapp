@@ -86,7 +86,7 @@ if DEBUG:
             'ENGINE': 'mssql',
             'NAME': 'testing',
             'USER': 'saikrosuri@myfirst-saikrosuri',
-            'PASSWORD': 'Sai@8900',
+            'PASSWORD': os.getenv('AZURE_MYSQL_PASSWORD'),
             'HOST': 'myfirst-saikrosuri.database.windows.net',
             'PORT': '1433',
             'OPTIONS': {
@@ -108,7 +108,7 @@ else:
             'ENGINE': 'mssql',
             'NAME': os.getenv('AZURE_MYSQL_NAME'),
             'USER': os.getenv('AZURE_MYSQL_USER'),
-            'PASSWORD': accessToken.token,
+            'PASSWORD': os.getenv('AZURE_MYSQL_PASSWORD'),
             'HOST': os.getenv('AZURE_MYSQL_HOST'),
             'PORT': '1433',
             'OPTIONS': {
@@ -128,7 +128,7 @@ if DEBUG:
 else:
     DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
     AZURE_ACCOUNT_NAME = 'mediafilesstorage8900'
-    AZURE_ACCOUNT_KEY = 'e0KlI685sKVE6TIxkeX42vB91KTabQ8++Vd/8Q86vYDaHaLkKVsrYiuUe6nJlPO6i5P1rmOqrI2k+ASttZX1AQ=='
+    AZURE_ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY', '')
     AZURE_CONTAINER = 'media'
     MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
 
@@ -177,14 +177,6 @@ if DEBUG:
     STATICFILES_DIR = os.path.join(BASE_DIR, '/static')
 else:
     # Use django-storages for static too
-    '''
-    STATICFILES_DIR = 'storages.backends.azure_storage.AzureStorage'
-    AZURE_ACCOUNT_NAME = "mediafilesstorage8900"
-    AZURE_ACCOUNT_KEY = "e0KlI685sKVE6TIxkeX42vB91KTabQ8++Vd/8Q86vYDaHaLkKVsrYiuUe6nJlPO6i5P1rmOqrI2k+ASttZX1AQ=="
-    AZURE_STATIC_CONTAINER = "static"
-    STATIC_ROOT = os.path.join(BASE_DIR, 'admin')
-    STATIC_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STATIC_CONTAINER}/"
-    '''
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
