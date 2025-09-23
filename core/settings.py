@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from pathlib import Path
+from azure.identity import ManagedIdentityCredential, ClientSecretCredential
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +27,8 @@ SECRET_KEY = '13%27dbe@$4vb-hkrp$k!jphn&%@7^%0ipy+sj$zi6d7%s$os('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME'] if DEBUG else '*']
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,23 +80,47 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 #Driver={ODBC Driver 18 for SQL Server};Server=tcp:myfirst-saikrosuri.database.windows.net,1433;Database=testing;Uid=saikrosuri;
 #Pwd={your_password_here};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'testing',
-        'USER': 'saikrosuri@myfirst-saikrosuri',
-        'PASSWORD': 'Sai@8900',
-        'HOST': 'myfirst-saikrosuri.database.windows.net',
-        'PORT': '1433',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 18 for SQL Server',
-            'Encrypt': 'yes',
-            'TrustServerCertificate': 'no',
-            'Connection Timeout': 60,
-        },
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mssql',
+            'NAME': 'testing',
+            'USER': 'saikrosuri@myfirst-saikrosuri',
+            'PASSWORD': 'Sai@8900',
+            'HOST': 'myfirst-saikrosuri.database.windows.net',
+            'PORT': '1433',
+            'OPTIONS': {
+                'driver': 'ODBC Driver 18 for SQL Server',
+                'Encrypt': 'yes',
+                'TrustServerCertificate': 'no',
+                'Connection Timeout': 60,
+            },
+        }
     }
-}
+else:
+    tenant_id = os.getenv('AZURE_MYSQL_TENANTID')
+    client_id = os.getenv('AZURE_MYSQL_CLIENTID')
+    client_secret = os.getenv('AZURE_MYSQL_CLIENTSECRET')
+    cred = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
+    accessToken = cred.get_token('https://ossrdbms-aad.database.windows.net/.default')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mssql',
+            'NAME': os.getenv('AZURE_MYSQL_NAME'),
+            'USER': os.getenv('AZURE_MYSQL_USER'),
+            'PASSWORD': accessToken.token,
+            'HOST': os.getenv('AZURE_MYSQL_HOST'),
+            'PORT': '1433',
+            'OPTIONS': {
+                'driver': 'ODBC Driver 18 for SQL Server',
+                'Encrypt': 'yes',
+                'TrustServerCertificate': 'no',
+                'Connection Timeout': 60,
+            },
+        }
+    }
+# core/settings.py
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
     MEDIA_URL = '/media/'
@@ -142,15 +169,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+# STATIC_URL = '/static/'
+# STATICFILES_DIR = os.path.join(BASE_DIR, '/static')
 
 if DEBUG:
     STATIC_URL = '/static/'
     STATICFILES_DIR = os.path.join(BASE_DIR, '/static')
 else:
     # Use django-storages for static too
+    '''
     STATICFILES_DIR = 'storages.backends.azure_storage.AzureStorage'
     AZURE_ACCOUNT_NAME = "mediafilesstorage8900"
     AZURE_ACCOUNT_KEY = "e0KlI685sKVE6TIxkeX42vB91KTabQ8++Vd/8Q86vYDaHaLkKVsrYiuUe6nJlPO6i5P1rmOqrI2k+ASttZX1AQ=="
     AZURE_STATIC_CONTAINER = "static"
     STATIC_ROOT = os.path.join(BASE_DIR, 'admin')
     STATIC_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STATIC_CONTAINER}/"
+    '''
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
