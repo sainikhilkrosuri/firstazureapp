@@ -19,7 +19,7 @@ SECRET_KEY = os.getenv(
     "dev-secret-key-unsafe"  # fallback for local only
 )
 
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = True
 
 hostname = os.environ.get("WEBSITE_HOSTNAME")
 if hostname:
@@ -83,10 +83,10 @@ if DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "mssql",
-            "NAME": "testing",
-            "USER": "saikrosuri@myfirst-saikrosuri",
-            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD", "localpassword"),
-            "HOST": "myfirst-saikrosuri.database.windows.net",
+            "NAME": os.getenv("AZURE_MYSQL_NAME"),
+            "USER": os.getenv("AZURE_MYSQL_USER"),
+            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD"),
+            "HOST": os.getenv("AZURE_MYSQL_HOST"),
             "PORT": "1433",
             "OPTIONS": {
                 "driver": "ODBC Driver 18 for SQL Server",
@@ -120,9 +120,8 @@ else:
 
 if DEBUG:
     STATIC_URL = "/static/"
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
 else:
     STATIC_URL = "/static/"
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
