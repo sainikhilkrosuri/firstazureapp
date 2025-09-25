@@ -82,7 +82,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 if DEBUG:
     DATABASES = {
         "default": {
-            "ENGINE": "mssql",
+            "ENGINE": "django.db.backends.mysql",
             "NAME": os.getenv("AZURE_MYSQL_NAME"),
             "USER": os.getenv("AZURE_MYSQL_USER"),
             "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD"),
@@ -99,7 +99,7 @@ if DEBUG:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "mssql",
+            "ENGINE": "django.db.backends.mysql",
             "NAME": os.getenv("AZURE_MYSQL_NAME"),
             "USER": os.getenv("AZURE_MYSQL_USER"),
             "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD"),
