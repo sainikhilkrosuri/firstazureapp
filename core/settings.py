@@ -98,9 +98,9 @@ if DEBUG:
         }
     }
 else:
-    tenant_id = os.getenv('AZURE_MYSQL_TENANTID')
-    client_id = os.getenv('AZURE_MYSQL_CLIENTID')
-    client_secret = os.getenv('AZURE_MYSQL_CLIENTSECRET')
+    tenant_id = os.environ.get("AZURE_TENANT_ID")
+    client_id = os.environ.get("AZURE_CLIENT_ID")
+    client_secret = os.environ.get("AZURE_CLIENT_SECRET")
     cred = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
     accessToken = cred.get_token('https://ossrdbms-aad.database.windows.net/.default')
     DATABASES = {
