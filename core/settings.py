@@ -27,8 +27,8 @@ SECRET_KEY = '13%27dbe@$4vb-hkrp$k!jphn&%@7^%0ipy+sj$zi6d7%s$os('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME'] if DEBUG else '*']
-CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
+ALLOWED_HOSTS = 'azurefirstapp-bzaag5aqguftdgeu.centralus-01.azurewebsites.net'
+CSRF_TRUSTED_ORIGINS = ['https://' + 'azurefirstapp-bzaag5aqguftdgeu.centralus-01.azurewebsites.net']
 
 
 # Application definition
