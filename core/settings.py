@@ -23,8 +23,8 @@ DEBUG = False
 
 hostname = os.environ.get("WEBSITE_HOSTNAME")
 if hostname:
-    ALLOWED_HOSTS = [hostname]
-    CSRF_TRUSTED_ORIGINS = [f"https://{hostname}"]
+    ALLOWED_HOSTS = ['azurefirstapp-bzaag5aqguftdgeu.centralus-01.azurewebsites.net']
+    CSRF_TRUSTED_ORIGINS = [f"https://azurefirstapp-bzaag5aqguftdgeu.centralus-01.azurewebsites.net"]
 else:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
     CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
