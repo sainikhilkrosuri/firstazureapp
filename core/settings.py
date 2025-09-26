@@ -19,7 +19,7 @@ SECRET_KEY = os.getenv(
     "dev-secret-key-unsafe"  # fallback for local only
 )
 
-DEBUG = True
+DEBUG = False
 
 hostname = os.environ.get("WEBSITE_HOSTNAME")
 if hostname:
