@@ -82,12 +82,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 if DEBUG:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("AZURE_MYSQL_NAME"),
-            "USER": os.getenv("AZURE_MYSQL_USER"),
-            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD"),
-            "HOST": os.getenv("AZURE_MYSQL_HOST"),
-            "PORT": "3306",
+            "ENGINE": "mssql",
+            "NAME": os.getenv("AZURE_MYSQL_NAME_1"),
+            "USER": os.getenv("AZURE_MYSQL_USER_1"),
+            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD_1"),
+            "HOST": os.getenv("AZURE_MYSQL_HOST_1"),
+            "PORT": "1433",
             "OPTIONS": {
                 "driver": "ODBC Driver 18 for SQL Server",
                 "Encrypt": "yes",
@@ -99,12 +99,12 @@ if DEBUG:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("AZURE_MYSQL_NAME"),
-            "USER": os.getenv("AZURE_MYSQL_USER"),
-            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD"),
-            "HOST": os.getenv("AZURE_MYSQL_HOST"),
-            "PORT": "3306",
+            "ENGINE": "mssql",
+            "NAME": os.getenv("AZURE_MYSQL_NAME_1"),
+            "USER": os.getenv("AZURE_MYSQL_USER_1"),
+            "PASSWORD": os.getenv("AZURE_MYSQL_PASSWORD_1"),
+            "HOST": os.getenv("AZURE_MYSQL_HOST_1"),
+            "PORT": "1433",
             "OPTIONS": {
                 "driver": "ODBC Driver 18 for SQL Server",
                 "Encrypt": "yes",
